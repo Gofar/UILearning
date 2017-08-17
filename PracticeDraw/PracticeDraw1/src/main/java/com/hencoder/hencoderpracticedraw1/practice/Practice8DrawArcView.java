@@ -2,11 +2,15 @@ package com.hencoder.hencoderpracticedraw1.practice;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class Practice8DrawArcView extends View {
+    Paint paint = new Paint();
 
     public Practice8DrawArcView(Context context) {
         super(context);
@@ -25,5 +29,15 @@ public class Practice8DrawArcView extends View {
         super.onDraw(canvas);
 
 //        练习内容：使用 canvas.drawArc() 方法画弧形和扇形
+        paint.setColor(Color.BLACK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            paint.setStyle(Paint.Style.STROKE);
+            canvas.drawArc(200, 100, 800, 500, 180, 60, false, paint); // 绘制画线弧形
+            canvas.drawArc(200,100,800,500,130,45,true,paint); // 绘制画线扇形
+
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawArc(200,100,800,500,-110,100,true,paint); // 绘制填充扇形
+            canvas.drawArc(200,100,800,500,20,45,false,paint);// 绘制填充弧形
+        }
     }
 }
