@@ -43,7 +43,7 @@ public class Practice10HistogramView extends View {
         paint.setTextSize(size);
         paint.setTextAlign(Paint.Align.CENTER); // 文本居中显示
 
-        canvas.drawLine(X0, 10, X0, Y0, paint); // 画纵轴
+        canvas.drawLine(X0, 10, X0, Y0, paint); // 画Y轴
 
         // 开始画柱子
         drawPillar(canvas, X0, 1, "first");
@@ -54,7 +54,7 @@ public class Practice10HistogramView extends View {
         drawPillar(canvas, X0 + Z * 5, 20, "six");
         drawPillar(canvas, X0 + Z * 6, 75, "seven");
 
-        canvas.drawLine(X0 + Z * 7, Y0, X0 + Z * 7 + P * 2, Y0, paint); // 为美观给Y轴右边添加突出长P * 2的一段线
+        canvas.drawLine(X0 + Z * 7, Y0, X0 + Z * 7 + P * 2, Y0, paint); // 为美观给X轴右边添加突出长P * 2的一段线
     }
 
     /**
@@ -78,7 +78,7 @@ public class Practice10HistogramView extends View {
             path.addRect(x + P, Y0 - v * V, x + P + L, Y0, Path.Direction.CW);
             canvas.drawPath(path, paint1);
         }
-        canvas.drawLine(x, Y0, x + Z, Y0, paint); // 柱子Y轴线
+        canvas.drawLine(x, Y0, x + Z, Y0, paint); // 柱子X轴线
         canvas.drawText(text, x + P + Z / 2, Y0 + paint.getFontSpacing(), paint); // 绘制底部文字
     }
 }
