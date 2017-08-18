@@ -36,9 +36,11 @@ public class Practice09StrokeCapView extends View {
         canvas.drawLine(50, 50, 400, 50, paint);
 
         // 第二个：ROUND
+        paint.setStrokeCap(Paint.Cap.ROUND);
         canvas.drawLine(50, 150, 400, 150, paint);
 
         // 第三个：SQUARE
+        paint.setStrokeCap(Paint.Cap.SQUARE);
         canvas.drawLine(50, 250, 400, 250, paint);
     }
 }
