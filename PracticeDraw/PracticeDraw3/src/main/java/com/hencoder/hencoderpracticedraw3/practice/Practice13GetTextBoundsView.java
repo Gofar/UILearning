@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 public class Practice13GetTextBoundsView extends View {
@@ -19,6 +21,7 @@ public class Practice13GetTextBoundsView extends View {
     String text6 = "â";
     int top = 200;
     int bottom = 400;
+    int[] yOffset = {0, 0, 0, 0, 0, 0};
 
     public Practice13GetTextBoundsView(Context context) {
         super(context);
@@ -37,6 +40,23 @@ public class Practice13GetTextBoundsView extends View {
         paint1.setStrokeWidth(20);
         paint1.setColor(Color.parseColor("#E91E63"));
         paint2.setTextSize(160);
+
+        // 测量bounds,左上右下：2,-114,103,0
+        // 将文字高度的一半作为偏移量，绘制文字时将文字的y基准线加上偏移量，使基准线下移，让文字绘制在中间
+        Rect rectBound = new Rect();
+        paint2.getTextBounds(text1, 0, 1, rectBound);
+        Log.d("Practice", rectBound.left + "," + rectBound.top + "," + rectBound.right + "," + rectBound.bottom);
+        yOffset[0] = -(rectBound.top + rectBound.bottom) / 2;
+        paint2.getTextBounds(text2, 0, 1, rectBound);
+        yOffset[1] = -(rectBound.top + rectBound.bottom) / 2;
+        paint2.getTextBounds(text3, 0, 1, rectBound);
+        yOffset[2] = -(rectBound.top + rectBound.bottom) / 2;
+        paint2.getTextBounds(text4, 0, 1, rectBound);
+        yOffset[3] = -(rectBound.top + rectBound.bottom) / 2;
+        paint2.getTextBounds(text5, 0, 1, rectBound);
+        yOffset[4] = -(rectBound.top + rectBound.bottom) / 2;
+        paint2.getTextBounds(text6, 0, 1, rectBound);
+        yOffset[5] = -(rectBound.top + rectBound.bottom) / 2;
     }
 
     @Override
@@ -49,12 +69,13 @@ public class Practice13GetTextBoundsView extends View {
         // 然后计算出文字的绘制位置，从而让文字上下居中
         // 这种居中算法的优点是，可以让文字精准地居中，分毫不差
 
+
         int middle = (top + bottom) / 2;
-        canvas.drawText(text1, 100, middle, paint2);
-        canvas.drawText(text2, 200, middle, paint2);
-        canvas.drawText(text3, 300, middle, paint2);
-        canvas.drawText(text4, 400, middle, paint2);
-        canvas.drawText(text5, 500, middle, paint2);
-        canvas.drawText(text6, 600, middle, paint2);
+        canvas.drawText(text1, 100, middle + yOffset[0], paint2);
+        canvas.drawText(text2, 200, middle + yOffset[1], paint2);
+        canvas.drawText(text3, 300, middle + yOffset[2], paint2);
+        canvas.drawText(text4, 400, middle + yOffset[3], paint2);
+        canvas.drawText(text5, 500, middle + yOffset[4], paint2);
+        canvas.drawText(text6, 600, middle + yOffset[5], paint2);
     }
 }
