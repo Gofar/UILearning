@@ -38,7 +38,16 @@ public class Practice06SkewView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // 错切是根据view坐标系让内容偏移，往x、y正向是正值，否则是负值。
+        // 如果不指定错切中心，内容会往错切方向上偏移一段距离
+        canvas.save();
+        canvas.skew(0, 0.5f);
         canvas.drawBitmap(bitmap, point1.x, point1.y, paint);
+        canvas.restore();
+
+        canvas.save();
+        canvas.skew(-0.5f, 0);
         canvas.drawBitmap(bitmap, point2.x, point2.y, paint);
+        canvas.restore();
     }
 }
