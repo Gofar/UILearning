@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PayInputView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="corner_radius" format="dimension" />
+        <attr name="count" format="integer" />
+        <attr name="text_color" format="color" />
+        <attr name="text_size" format="dimension"/>
+        <attr name="text_mode">
+            <enum name="password" value="0" />
+            <enum name="text" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>
