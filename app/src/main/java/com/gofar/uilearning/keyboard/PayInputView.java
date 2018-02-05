@@ -1,8 +1,6 @@
 package com.gofar.uilearning.keyboard;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -37,12 +35,10 @@ public class PayInputView extends View {
     private static final int DEFAULT_TEXT_SIZE = 15;
     private static final int DEFAULT_COUNT = 6;
     private static final int DEFAULT_MODE = MODE_PASSWORD;
+    private static final int DEFAULT_POINT_RADIUS = 20;
+    private static final int DEFAULT_WIDTH = 50;
 
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    /**
-     * 密码黑点的半径
-     */
-    private int mPointRadius = 20;
     /**
      * 边框宽度
      */
@@ -50,7 +46,7 @@ public class PayInputView extends View {
     /**
      * 边框颜色
      */
-    private ColorStateList mBorderColor;
+    private int mBorderColor;
     /**
      * 圆角大小
      */
@@ -58,7 +54,7 @@ public class PayInputView extends View {
     /**
      * 密码文字颜色
      */
-    private ColorStateList mTextColor;
+    private int mTextColor;
     /**
      * 密码文字大小
      */
@@ -91,45 +87,67 @@ public class PayInputView extends View {
      * 文字或黑点的模式
      */
     private int mMode;
-
+    /**
+     * 密码黑点的半径
+     */
+    private int mPointRadius;
     /**
      * 密码字符串
      */
     private String mPassword = "";
 
     public PayInputView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public PayInputView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public PayInputView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(21)
-    public PayInputView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        resolveAttrs(context, attrs, defStyleAttr);
     }
 
     private void resolveAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PayInputView, defStyleAttr, 0);
         mBorderWidth = a.getDimensionPixelSize(R.styleable.PayInputView_border_width, DEFAULT_BORDER_WIDTH);
-        mBorderColor = a.getColorStateList(R.styleable.PayInputView_border_color);
-        if (mBorderColor == null) {
-            mBorderColor = ColorStateList.valueOf(DEFAULT_BORDER_COLOR);
-        }
+        mBorderColor = a.getColor(R.styleable.PayInputView_border_color, DEFAULT_BORDER_COLOR);
         mCornerRadius = a.getDimensionPixelOffset(R.styleable.PayInputView_corner_radius, -1);
-        mTextColor = a.getColorStateList(R.styleable.PayInputView_text_color);
-        if (mTextColor == null) {
-            mTextColor = ColorStateList.valueOf(DEFAULT_TEXT_COLOR);
-        }
+        mPointRadius = a.getDimensionPixelOffset(R.styleable.PayInputView_point_radius, DEFAULT_POINT_RADIUS);
+        mTextColor = a.getColor(R.styleable.PayInputView_text_color, DEFAULT_TEXT_COLOR);
         mTextSize = a.getDimensionPixelSize(R.styleable.PayInputView_text_size, DEFAULT_TEXT_SIZE);
         mCount = a.getInt(R.styleable.PayInputView_count, DEFAULT_COUNT);
         mMode = a.getInt(R.styleable.PayInputView_text_mode, DEFAULT_MODE);
         a.recycle();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        int width;
+        int height;
+        int defaultWidth = (int) (getResources().getDisplayMetrics().density * DEFAULT_WIDTH + 0.5f);
+        if (widthMode == MeasureSpec.EXACTLY) {
+            width = widthSize;
+        } else if (widthMode == MeasureSpec.AT_MOST) {
+            width = Math.min(defaultWidth, widthSize);
+        } else {
+            width = defaultWidth;
+        }
+
+        if (heightMode == MeasureSpec.EXACTLY) {
+            height = heightSize;
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            height = Math.min(width / mCount, heightSize);
+        } else {
+            height = width / mCount;
+        }
+        setMeasuredDimension(width, height);
     }
 
     @Override
@@ -150,7 +168,7 @@ public class PayInputView extends View {
      * 绘制边框
      */
     private void drawBorder(Canvas canvas) {
-        mPaint.setColor(mBorderColor.getDefaultColor());
+        mPaint.setColor(mBorderColor);
         mPaint.setStrokeWidth(mBorderWidth);
         mPaint.setStyle(Paint.Style.STROKE);
         if (mCornerRadius > 0) {
@@ -170,8 +188,8 @@ public class PayInputView extends View {
      * 绘制分割线
      */
     private void drawDivider(Canvas canvas) {
-        mPaint.setColor(mBorderColor.getDefaultColor());
-        mPaint.setStrokeWidth(mBorderWidth);
+        mPaint.setColor(mBorderColor);
+        mPaint.setStrokeWidth(mBorderWidth / 2);
         mPaint.setStyle(Paint.Style.STROKE);
         for (int i = 0; i < mCount - 1; i++) {
             canvas.drawLine(mDividerX * (i + 1), 0, mDividerX * (i + 1), mHeight, mPaint);
@@ -185,7 +203,7 @@ public class PayInputView extends View {
         int length = mPassword.length();
         if (length > 0) {
             for (int i = 0; i < length; i++) {
-                mPaint.setColor(mTextColor.getDefaultColor());
+                mPaint.setColor(mTextColor);
                 mPaint.setStyle(Paint.Style.FILL);
                 if (mMode == MODE_PASSWORD) {
                     canvas.drawCircle(mStartX + mDividerX * i, mStartY, mPointRadius, mPaint);
