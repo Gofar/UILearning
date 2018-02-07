@@ -15,6 +15,8 @@ import android.view.View;
 import com.gofar.uilearning.R;
 
 /**
+ * 密码输入框
+ *
  * @author lcf
  * @date 2018/2/4 21:00
  * @since 1.0
@@ -35,10 +37,10 @@ public class PayInputView extends View {
     private static final int DEFAULT_TEXT_SIZE = 15;
     private static final int DEFAULT_COUNT = 6;
     private static final int DEFAULT_MODE = MODE_PASSWORD;
-    private static final int DEFAULT_POINT_RADIUS = 20;
-    private static final int DEFAULT_WIDTH = 50;
+    private static final int DEFAULT_POINT_RADIUS = 15;
+    private static final int DEFAULT_WIDTH = 48;
 
-    private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mPaint = new Paint();
     /**
      * 边框宽度
      */
@@ -66,23 +68,23 @@ public class PayInputView extends View {
     /**
      * 总宽度
      */
-    private int mWidth;
+    private float mWidth;
     /**
      * 总高度
      */
-    private int mHeight;
+    private float mHeight;
     /**
      * X轴分隔间距（每个输入框的宽度）
      */
-    private int mDividerX;
+    private float mDividerX;
     /**
      * 密码文字绘制起始点X
      */
-    private int mStartX;
+    private float mStartX;
     /**
      * 密码文字绘制起始点y
      */
-    private int mStartY;
+    private float mStartY;
     /**
      * 文字或黑点的模式
      */
@@ -95,6 +97,9 @@ public class PayInputView extends View {
      * 密码字符串
      */
     private String mPassword = "";
+
+    private KeyboardView mKeyboardView;
+    private OnPassWordChangeListener mOnPassWordChangeListener;
 
     public PayInputView(Context context) {
         this(context, null);
@@ -159,6 +164,8 @@ public class PayInputView extends View {
         mStartX = mDividerX / 2;
         mStartY = mHeight / 2;
 
+
+        mPaint.setAntiAlias(true);
         drawBorder(canvas);
         drawDivider(canvas);
         drawText(canvas);
@@ -174,13 +181,13 @@ public class PayInputView extends View {
         if (mCornerRadius > 0) {
             // 画圆角矩形
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                canvas.drawRoundRect(0, 0, mWidth, mHeight, mCornerRadius, mCornerRadius, mPaint);
+                canvas.drawRoundRect(mBorderWidth / 2, mBorderWidth / 2, mWidth - mBorderWidth / 2, mHeight - mBorderWidth / 2, mCornerRadius, mCornerRadius, mPaint);
             } else {
-                canvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), mCornerRadius, mCornerRadius, mPaint);
+                canvas.drawRoundRect(new RectF(mBorderWidth / 2, mBorderWidth / 2, mWidth - mBorderWidth / 2, mHeight - mBorderWidth / 2), mCornerRadius, mCornerRadius, mPaint);
             }
         } else {
             // 画矩形
-            canvas.drawRect(0, 0, mWidth, mHeight, mPaint);
+            canvas.drawRect(mBorderWidth / 2, mBorderWidth / 2, mWidth - mBorderWidth / 2, mHeight - mBorderWidth / 2, mPaint);
         }
     }
 
@@ -189,7 +196,7 @@ public class PayInputView extends View {
      */
     private void drawDivider(Canvas canvas) {
         mPaint.setColor(mBorderColor);
-        mPaint.setStrokeWidth(mBorderWidth / 2);
+        mPaint.setStrokeWidth(mBorderWidth);
         mPaint.setStyle(Paint.Style.STROKE);
         for (int i = 0; i < mCount - 1; i++) {
             canvas.drawLine(mDividerX * (i + 1), 0, mDividerX * (i + 1), mHeight, mPaint);
@@ -214,9 +221,62 @@ public class PayInputView extends View {
                     String text = String.valueOf(mPassword.charAt(i));
                     mPaint.getTextBounds(text, 0, text.length(), rect);
                     // 绘制文字
-                    canvas.drawText(text, mStartX - rect.width() / 2, mStartY + rect.height() / 2, mPaint);
+                    canvas.drawText(text, mStartX - rect.width() / 2 + mDividerX * i, mStartY + rect.height() / 2, mPaint);
                 }
             }
         }
+    }
+
+    /**
+     * 关联密码输入键盘
+     *
+     * @param keyboardView
+     */
+    public void setKeyboardView(KeyboardView keyboardView) {
+        this.mKeyboardView = keyboardView;
+        if (mKeyboardView != null) {
+            mKeyboardView.setOnKeyboardInputListener(new OnKeyboardClickListener() {
+                @Override
+                public void onTextClick(String text) {
+                    int length = mPassword.trim().length();
+                    if (length < mCount) {
+                        mPassword += text;
+                        postInvalidate();
+                        // 密码全部输入了
+                        if (length == mCount && mOnPassWordChangeListener != null) {
+                            mOnPassWordChangeListener.complete(mPassword);
+                        }
+                    }
+                }
+
+                @Override
+                public void onDeleteClick() {
+                    if (mPassword.trim().length() > 0) {
+                        mPassword = mPassword.substring(0, mPassword.length() - 1);
+                        postInvalidate();
+                    }
+                }
+            });
+        }
+    }
+
+    public OnPassWordChangeListener getOnPassWordChangeListener() {
+        return mOnPassWordChangeListener;
+    }
+
+    public void setOnPassWordChangeListener(OnPassWordChangeListener listener) {
+        this.mOnPassWordChangeListener = listener;
+    }
+
+    /**
+     * 密码输入回调
+     */
+    public interface OnPassWordChangeListener {
+        /**
+         * 密码输入完成
+         *
+         * @param password
+         */
+        void complete(String password);
     }
 }

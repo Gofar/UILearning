@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import android.view.View;
 
 public class Practice7DrawRoundRectView extends View {
     Paint paint = new Paint();
+
     public Practice7DrawRoundRectView(Context context) {
         super(context);
     }
@@ -29,8 +31,18 @@ public class Practice7DrawRoundRectView extends View {
 
 //        练习内容：使用 canvas.drawRoundRect() 方法画圆角矩形
         paint.setColor(Color.BLACK);
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+//        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+//            canvas.drawRoundRect(300, 150, 800, 400, 48, 48, paint);
+//        }
+        paint.setStrokeWidth(1);
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             canvas.drawRoundRect(300, 150, 800, 400, 48, 48, paint);
+        } else {
+            canvas.drawRoundRect(new RectF(300, 150, 800, 400), 20, 20, paint);
         }
+        canvas.drawLine(450, 150, 450, 400, paint);
+        canvas.drawLine(600, 150, 600, 400, paint);
     }
 }

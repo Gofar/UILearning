@@ -25,7 +25,7 @@ public class KeyboardView extends FrameLayout {
     private int KEY_EMPTY_INDEX = 9;
 
     private KeyboardAdapter mAdapter;
-    private OnKeyboardInputListener mOnKeyboardInputListener;
+    private OnKeyboardClickListener mOnKeyboardClickListener;
 
     public KeyboardView(@NonNull Context context) {
         this(context, null);
@@ -49,11 +49,11 @@ public class KeyboardView extends FrameLayout {
             @Override
             public void onItemClick(RecyclerView.Adapter adapter, View view, int position) {
                 KeyboardItem item = mAdapter.getData().get(position);
-                if (mOnKeyboardInputListener != null) {
+                if (mOnKeyboardClickListener != null) {
                     if (item.getType() == KeyboardType.TYPE_NUMBER) {
-                        mOnKeyboardInputListener.add(item.getTitle());
+                        mOnKeyboardClickListener.onTextClick(item.getTitle());
                     } else if (item.getType() == KeyboardType.TYPE_DELETE) {
-                        mOnKeyboardInputListener.delete();
+                        mOnKeyboardClickListener.onDeleteClick();
                     }
                 }
             }
@@ -73,11 +73,11 @@ public class KeyboardView extends FrameLayout {
         return items;
     }
 
-    public OnKeyboardInputListener getOnKeyboardInputListener() {
-        return mOnKeyboardInputListener;
+    public OnKeyboardClickListener getOnKeyboardInputListener() {
+        return mOnKeyboardClickListener;
     }
 
-    public void setOnKeyboardInputListener(OnKeyboardInputListener listener) {
-        this.mOnKeyboardInputListener = listener;
+    public void setOnKeyboardInputListener(OnKeyboardClickListener listener) {
+        this.mOnKeyboardClickListener = listener;
     }
 }

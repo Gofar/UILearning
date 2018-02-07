@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FAFAFA">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -40,15 +41,30 @@
             android:orientation="vertical">
 
             <com.gofar.uilearning.keyboard.PayInputView
+                android:id="@+id/pay_input_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_margin="16dp"
-                app:border_width="1dp"
-                app:corner_radius="5dp" />
+                app:border_color="@android:color/darker_gray"
+                app:border_width="2px"
+                app:corner_radius="5dp"
+                app:point_radius="5dp"
+                app:text_mode="password"/>
 
             <com.gofar.uilearning.keyboard.KeyboardView
+                android:id="@+id/keyboard_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <com.ccl.perfectisshit.payview.widget.PayView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp" />
+
+            <com.gofar.uilearning.PayTestView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="16dp" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

@@ -1,8 +1,13 @@
 package com.gofar.uilearning;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
+import com.gofar.uilearning.keyboard.KeyboardView;
+import com.gofar.uilearning.keyboard.PayInputView;
 
 /**
  * Author: lcf
@@ -15,5 +20,17 @@ public class MyShowActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_pay);
+        PayInputView payInputView = (PayInputView) findViewById(R.id.pay_input_view);
+        KeyboardView keyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
+        payInputView.setKeyboardView(keyboardView);
+
+        payInputView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyShowActivity.this, PayActivity.class));
+                //overridePendingTransition(0,0);
+            }
+        });
+
     }
 }
