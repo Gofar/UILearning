@@ -55,7 +55,7 @@ public class MyTestActivity extends AppCompatActivity {
                     public void run() {
                         requestButtonF.requestSuccess();
                     }
-                }, 3000);
+                }, 2000);
 
             }
         }, 3000);
