@@ -116,14 +116,14 @@ public class PayInputView extends View {
 
     private void resolveAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PayInputView, defStyleAttr, 0);
-        mBorderWidth = a.getDimensionPixelSize(R.styleable.PayInputView_border_width, DEFAULT_BORDER_WIDTH);
-        mBorderColor = a.getColor(R.styleable.PayInputView_border_color, DEFAULT_BORDER_COLOR);
-        mCornerRadius = a.getDimensionPixelOffset(R.styleable.PayInputView_corner_radius, -1);
-        mPointRadius = a.getDimensionPixelOffset(R.styleable.PayInputView_point_radius, DEFAULT_POINT_RADIUS);
-        mTextColor = a.getColor(R.styleable.PayInputView_text_color, DEFAULT_TEXT_COLOR);
-        mTextSize = a.getDimensionPixelSize(R.styleable.PayInputView_text_size, DEFAULT_TEXT_SIZE);
-        mCount = a.getInt(R.styleable.PayInputView_count, DEFAULT_COUNT);
-        mMode = a.getInt(R.styleable.PayInputView_text_mode, DEFAULT_MODE);
+        mBorderWidth = a.getDimensionPixelSize(R.styleable.PayInputView_pay_border_width, DEFAULT_BORDER_WIDTH);
+        mBorderColor = a.getColor(R.styleable.PayInputView_pay_border_color, DEFAULT_BORDER_COLOR);
+        mCornerRadius = a.getDimensionPixelOffset(R.styleable.PayInputView_pay_corner_radius, -1);
+        mPointRadius = a.getDimensionPixelOffset(R.styleable.PayInputView_pay_point_radius, DEFAULT_POINT_RADIUS);
+        mTextColor = a.getColor(R.styleable.PayInputView_pay_text_color, DEFAULT_TEXT_COLOR);
+        mTextSize = a.getDimensionPixelSize(R.styleable.PayInputView_pay_text_size, DEFAULT_TEXT_SIZE);
+        mCount = a.getInt(R.styleable.PayInputView_pay_count, DEFAULT_COUNT);
+        mMode = a.getInt(R.styleable.PayInputView_pay_text_mode, DEFAULT_MODE);
         a.recycle();
     }
 
@@ -243,7 +243,7 @@ public class PayInputView extends View {
                         mPassword += text;
                         postInvalidate();
                         // 密码全部输入了
-                        if (length == mCount && mOnPassWordChangeListener != null) {
+                        if (mPassword.length() == mCount && mOnPassWordChangeListener != null) {
                             mOnPassWordChangeListener.complete(mPassword);
                         }
                     }

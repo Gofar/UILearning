@@ -1,11 +1,15 @@
 package com.gofar.uilearning;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -15,6 +19,8 @@ import android.widget.TextView;
 
 import com.gofar.uilearning.keyboard.KeyboardView;
 import com.gofar.uilearning.keyboard.PayInputView;
+import com.gofar.uilearning.requestbutton.OnRequestCallback;
+import com.gofar.uilearning.requestbutton.RequestButton;
 
 /**
  * @author lcf
@@ -26,7 +32,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     private TextView mTvForgetPsd;
     private PayInputView mPayInputView;
     private KeyboardView mKeyboardView;
-    private TextView mTvLoading;
+    private RequestButton mRequestButton;
     private FrameLayout mLayPay;
     private LinearLayout mLayLoading;
     private LinearLayout mLayRoot;
@@ -41,14 +47,24 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        getWindow().setGravity(Gravity.BOTTOM);
+        // 隐藏标题栏
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_pay);
+        // 全屏展示
+        Window window = getWindow();
+        if (window != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            }
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+        }
         mIvClose = findViewById(R.id.iv_close);
         mTvForgetPsd = findViewById(R.id.tv_forget_psd);
         mPayInputView = findViewById(R.id.pay_input_view);
         mKeyboardView = findViewById(R.id.keyboard_view);
-        mTvLoading = findViewById(R.id.tv_loading);
+        mRequestButton = findViewById(R.id.request_button);
         mLayPay = findViewById(R.id.lay_pay);
         mLayLoading = findViewById(R.id.lay_loading);
         mLayRoot = findViewById(R.id.lay_root);
@@ -63,8 +79,29 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
                 submit(password);
             }
         });
+        mRequestButton.setOnRequestCallback(new OnRequestCallback() {
+            @Override
+            public boolean beforeRequest() {
+                return true;
+            }
 
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_slide_in_f);
+            @Override
+            public void onRequest() {
+
+            }
+
+            @Override
+            public void onFinish(boolean isSuccess) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 1000);
+            }
+        });
+
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_slide_in);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -88,30 +125,13 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_close:
-                finish();
+                close();
                 break;
             case R.id.tv_forget_psd:
                 break;
             case R.id.pay_input_view:
                 if (mKeyboardView.getVisibility() != View.VISIBLE) {
-                    Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_slide_in_f);
-                    animation.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            mKeyboardView.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    mKeyboardView.startAnimation(animation);
+                    needShowKeyboardView(true);
                 }
                 break;
             default:
@@ -122,16 +142,11 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     private void submit(String psd) {
         mLayPay.setVisibility(View.GONE);
         mLayLoading.setVisibility(View.VISIBLE);
+        mRequestButton.startRequest();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mTvLoading.setText("支付成功");
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, 200);
+                mRequestButton.requestSuccess();
             }
         }, 3000);
     }
@@ -139,7 +154,39 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onBackPressed() {
         if (mLayPay.getVisibility() == View.VISIBLE && mKeyboardView.getVisibility() == View.VISIBLE) {
-            Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_slide_out_f);
+            needShowKeyboardView(false);
+        } else {
+            close();
+        }
+    }
+
+    /**
+     * 是否展示KeyboardView
+     *
+     * @param need
+     */
+    private void needShowKeyboardView(boolean need) {
+        if (need) {
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_slide_in);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mKeyboardView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            mKeyboardView.startAnimation(animation);
+        } else {
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_slide_out);
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -157,8 +204,31 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
                 }
             });
             mKeyboardView.startAnimation(animation);
-        } else {
-            super.onBackPressed();
         }
+    }
+
+    /**
+     * 关闭Activity
+     * 先隐藏PayView,再关闭
+     */
+    private void close() {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_slide_out);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                finish();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mLayRoot.startAnimation(animation);
     }
 }

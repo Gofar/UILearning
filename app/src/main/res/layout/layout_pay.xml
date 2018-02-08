@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FAFAFA">
+    android:background="#FAFAFA"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,11 +45,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_margin="16dp"
-                app:border_color="@android:color/darker_gray"
-                app:border_width="2px"
-                app:corner_radius="5dp"
-                app:point_radius="5dp"
-                app:text_mode="password"/>
+                app:pay_border_color="@android:color/darker_gray"
+                app:pay_border_width="2px"
+                app:pay_corner_radius="5dp"
+                app:pay_point_radius="5dp"
+                app:pay_text_mode="password" />
 
             <com.gofar.uilearning.keyboard.KeyboardView
                 android:id="@+id/keyboard_view"
@@ -57,6 +57,7 @@
                 android:layout_height="wrap_content" />
 
             <com.ccl.perfectisshit.payview.widget.PayView
+                android:id="@+id/pay_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp" />

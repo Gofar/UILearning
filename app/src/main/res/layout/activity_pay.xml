@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#80000000">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/lay_root"
@@ -60,9 +59,9 @@
                         android:id="@+id/pay_input_view"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        app:border_color="@color/color_c9c9c9"
-                        app:border_width="2px"
-                        app:corner_radius="5dp" />
+                        app:pay_border_color="@color/color_c9c9c9"
+                        app:pay_border_width="2px"
+                        app:pay_corner_radius="5dp" />
 
                     <TextView
                         android:id="@+id/tv_forget_psd"
@@ -91,19 +90,21 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <ProgressBar
-                    android:id="@+id/pb"
-                    style="?android:attr/progressBarStyle"
+                <com.gofar.uilearning.requestbutton.RequestButton
+                    android:id="@+id/request_button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/tv_loading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="请求中..."
-                    android:textColor="#232323"
-                    android:textSize="18sp" />
+                    android:layout_height="match_parent"
+                    app:request_icon_size="2dp"
+                    app:request_icon_color="@color/colorAccent"
+                    app:request_icon_spacing="16dp"
+                    app:request_icon_style="tick_start_circle"
+                    app:request_speed_multiplier="2"
+                    app:text_color="#232323"
+                    app:text_default="default"
+                    app:text_failure="失败"
+                    app:text_progress="请求中..."
+                    app:text_size="16sp"
+                    app:text_success="成功" />
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
