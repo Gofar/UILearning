@@ -92,6 +92,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
 
             @Override
             public void onFinish(boolean isSuccess) {
+                // 延迟一秒关闭
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -101,6 +102,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
             }
         });
 
+        // 开始时从底部弹出
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.bottom_slide_in);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override

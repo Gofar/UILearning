@@ -92,12 +92,13 @@
 
                 <com.gofar.uilearning.requestbutton.RequestButton
                     android:id="@+id/request_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:request_icon_size="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     app:request_icon_color="@color/colorAccent"
-                    app:request_icon_spacing="16dp"
+                    app:request_icon_size="2dp"
+                    app:request_icon_spacing="8dp"
                     app:request_icon_style="tick_start_circle"
+                    app:request_icon_width="56dp"
                     app:request_speed_multiplier="2"
                     app:text_color="#232323"
                     app:text_default="default"

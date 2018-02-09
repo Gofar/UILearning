@@ -195,14 +195,14 @@ public class RequestButton extends LinearLayout implements View.OnClickListener,
         LinearLayout linearLayout = new LinearLayout(context);
         LayoutParams layoutParams;
         if (iconWidth > 0) {
-            layoutParams = new LayoutParams(iconWidth, iconWidth);
+            layoutParams = new LayoutParams(iconWidth, iconWidth+10);
         } else {
             layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1.0f);
         }
         layoutParams.bottomMargin = iconSpacing;
         linearLayout.setLayoutParams(layoutParams);
         linearLayout.setOrientation(VERTICAL);
-        linearLayout.setGravity(Gravity.CENTER);
+        linearLayout.setGravity(Gravity.BOTTOM);
 
         buttonText = new TextView(context);
         buttonText.setLayoutParams(new LayoutParams(textWidth == -1 ? ViewGroup.LayoutParams.WRAP_CONTENT : textWidth,

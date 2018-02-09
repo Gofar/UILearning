@@ -322,6 +322,8 @@ public class RequestIcon extends View {
                 lineProgress += speedMultiplier;
                 lineX += lineProgressIncrease * speedMultiplier;
                 if (progress > CIRCLE_PROGRESS_MAX + 1f) {
+                    // 最后没有绘制完整的圆，所以在这儿加一行
+                    canvas.drawArc(rectF, -90f, 360, false, paint);
                     reset();
                     if (listener != null)
                         listener.onTickFinished(this);
