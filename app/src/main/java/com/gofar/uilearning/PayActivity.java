@@ -73,7 +73,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
         mTvForgetPsd.setOnClickListener(this);
         mPayInputView.setOnClickListener(this);
         mPayInputView.setKeyboardView(mKeyboardView);
-        mPayInputView.setOnPassWordChangeListener(new PayInputView.OnPassWordChangeListener() {
+        mPayInputView.setOnPassWordInputListener(new PayInputView.OnPassWordInputListener() {
             @Override
             public void complete(String password) {
                 submit(password);
@@ -148,7 +148,8 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mRequestButton.requestSuccess();
+                //mRequestButton.requestSuccess();
+                mRequestButton.requestFailure();
             }
         }, 3000);
     }

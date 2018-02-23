@@ -99,7 +99,7 @@ public class PayInputView extends View {
     private String mPassword = "";
 
     private KeyboardView mKeyboardView;
-    private OnPassWordChangeListener mOnPassWordChangeListener;
+    private OnPassWordInputListener mOnPassWordInputListener;
 
     public PayInputView(Context context) {
         this(context, null);
@@ -235,7 +235,7 @@ public class PayInputView extends View {
     public void setKeyboardView(KeyboardView keyboardView) {
         this.mKeyboardView = keyboardView;
         if (mKeyboardView != null) {
-            mKeyboardView.setOnKeyboardInputListener(new OnKeyboardClickListener() {
+            mKeyboardView.setOnKeyboardClickListener(new OnKeyboardClickListener() {
                 @Override
                 public void onTextClick(String text) {
                     int length = mPassword.trim().length();
@@ -243,8 +243,8 @@ public class PayInputView extends View {
                         mPassword += text;
                         postInvalidate();
                         // 密码全部输入了
-                        if (mPassword.length() == mCount && mOnPassWordChangeListener != null) {
-                            mOnPassWordChangeListener.complete(mPassword);
+                        if (mPassword.length() == mCount && mOnPassWordInputListener != null) {
+                            mOnPassWordInputListener.complete(mPassword);
                         }
                     }
                 }
@@ -260,22 +260,22 @@ public class PayInputView extends View {
         }
     }
 
-    public OnPassWordChangeListener getOnPassWordChangeListener() {
-        return mOnPassWordChangeListener;
+    public OnPassWordInputListener getOnPassWordInputListener() {
+        return mOnPassWordInputListener;
     }
 
-    public void setOnPassWordChangeListener(OnPassWordChangeListener listener) {
-        this.mOnPassWordChangeListener = listener;
+    public void setOnPassWordInputListener(OnPassWordInputListener listener) {
+        this.mOnPassWordInputListener = listener;
     }
 
     /**
      * 密码输入回调
      */
-    public interface OnPassWordChangeListener {
+    public interface OnPassWordInputListener {
         /**
          * 密码输入完成
          *
-         * @param password
+         * @param password 密码文本
          */
         void complete(String password);
     }

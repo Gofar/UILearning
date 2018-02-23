@@ -73,11 +73,11 @@ public class KeyboardView extends FrameLayout {
         return items;
     }
 
-    public OnKeyboardClickListener getOnKeyboardInputListener() {
+    public OnKeyboardClickListener getOnKeyboardClickListener() {
         return mOnKeyboardClickListener;
     }
 
-    public void setOnKeyboardInputListener(OnKeyboardClickListener listener) {
+    public void setOnKeyboardClickListener(OnKeyboardClickListener listener) {
         this.mOnKeyboardClickListener = listener;
     }
 }
